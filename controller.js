@@ -31,13 +31,37 @@ async function getProductById(req, res) {
 }
 
 async function addProduct(req, res) {
-  let product = req.body;
+  let product = req.body.product;
 
   let result = await ProductModel.create(product);
 
   res.json({
     success: true,
-    msg: "Vous avez bien ajouté un produit",
+    msg: "Vous avez bien ajouté votre produit",
+    produitAjouté: result,
+  });
+}
+async function editProduct(req, res) {
+  let editedProduct = req.body.product;
+  let result = await ProductModel.findOneAndUpdate(
+    { id: editedProduct.id },
+    editedProduct
+  );
+
+  res.json({
+    success: true,
+    msg: "Vous avez bien modifié votre produit",
+    produitAjouté: result,
+  });
+}
+
+async function deleteProduct(req, res) {
+  let productId = req.body.id;
+  let result = await ProductModel.findOneAndDelete({ id: productId });
+
+  res.json({
+    success: true,
+    msg: "Vous avez bien supprimé votre produit",
     produitAjouté: result,
   });
 }
@@ -45,6 +69,8 @@ const productController = {
   getProducts: getProducts,
   getProductById: getProductById,
   addProduct: addProduct,
+  editProduct: editProduct,
+  deleteProduct: deleteProduct,
 };
 
 module.exports = productController;
