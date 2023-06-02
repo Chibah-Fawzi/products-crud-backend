@@ -4,8 +4,10 @@ const port = 3000;
 const db = require("./db");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const router = express.Router();
 
-const productController = require("./controller");
+const productRoutes = require("./routes/ProductRoutes");
+const userRoutes = require("./routes/UserRoutes");
 
 // Permet de recevoir un body d'une requête
 app.use(bodyParser());
@@ -14,23 +16,15 @@ app.use(bodyParser());
 app.use(cors());
 
 app.get("/", (req, res) => {
-  res.send("HELLO WORLD!");
+  res.send("Hello world");
 });
 
-app.get("/products", (req, res) => productController.getProducts(req, res));
+// On ajoute la méthode app.use afin d'initialiser les chemins à '/' : tout les chemins qu'on va ajouter débuteront par '/'
+app.use("/", router);
 
-app.post("/products", (req, res) => productController.addProduct(req, res));
-
-app.put("/products", (req, res) => {
-  productController.editProduct(req, res);
-});
-app.delete("/products", (req, res) => {
-  productController.deleteProduct(req, res);
-});
-
-app.get("/product/:id", (req, res) =>
-  productController.getProductById(req, res)
-);
+// On initalise les routes
+productRoutes.init(router);
+userRoutes.init(router);
 
 app.listen(port, () =>
   console.log(`Products CRUD app listening on port ${port}!`)
